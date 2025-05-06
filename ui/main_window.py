@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import (
     QButtonGroup, QSlider
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
-from PyQt6.QtGui import QPixmap, QImage
+from PyQt6.QtGui import QPixmap
 
 from image_compression import rle, huffman
 # from video_compression import delta, motion
