@@ -1,5 +1,5 @@
 import os
-import cv2
+# import cv2
 from PIL import Image, ImageQt
 from PyQt6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QFileDialog,
@@ -10,7 +10,7 @@ from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QPixmap, QImage
 
 from image_compression import rle, huffman
-from video_compression import delta, motion
+# from video_compression import delta, motion
 
 class CompressionThread(QThread):
     progress_signal = pyqtSignal(int)
@@ -41,17 +41,17 @@ class CompressionThread(QThread):
 
                 self.finished_signal.emit((output_path, ratio))
 
-            elif self.file_type == 'video':
-                if self.algorithm == 'delta':
-                    output_path, ratio = delta.compress_video(self.input_path, self.output_path, self.quality)
-                elif self.algorithm == 'motion':
-                    output_path, ratio = motion.compress_video(self.input_path, self.output_path, self.quality)
-                else:
-                    raise ValueError(f"Unknown video algorithm: {self.algorithm}")
+            # elif self.file_type == 'video':
+            #     if self.algorithm == 'delta':
+            #         output_path, ratio = delta.compress_video(self.input_path, self.output_path, self.quality)
+            #     elif self.algorithm == 'motion':
+            #         output_path, ratio = motion.compress_video(self.input_path, self.output_path, self.quality)
+            #     else:
+            #         raise ValueError(f"Unknown video algorithm: {self.algorithm}")
 
-                self.progress_signal.emit(90)
+            #     self.progress_signal.emit(90)
 
-                self.finished_signal.emit((output_path, ratio))
+            #     self.finished_signal.emit((output_path, ratio))
 
             else:
                 raise ValueError(f"Unknown file type: {self.file_type}")
@@ -83,10 +83,10 @@ class MainWindow(QMainWindow):
 
         tabs = QTabWidget()
         image_tab = QWidget()
-        video_tab = QWidget()
+        # video_tab = QWidget()
 
         tabs.addTab(image_tab, "Image Compression")
-        tabs.addTab(video_tab, "Video Compression")
+        # tabs.addTab(video_tab, "Video Compression")
 
         image_layout = QVBoxLayout(image_tab)
 
@@ -180,97 +180,97 @@ class MainWindow(QMainWindow):
 
         image_layout.addLayout(preview_layout)
 
-        video_layout = QVBoxLayout(video_tab)
+        # video_layout = QVBoxLayout(video_tab)
 
-        video_file_group = QGroupBox("Input Video")
-        video_file_layout = QHBoxLayout(video_file_group)
+        # video_file_group = QGroupBox("Input Video")
+        # video_file_layout = QHBoxLayout(video_file_group)
 
-        self.video_file_label = QLabel("No file selected")
-        video_file_layout.addWidget(self.video_file_label)
+        # self.video_file_label = QLabel("No file selected")
+        # video_file_layout.addWidget(self.video_file_label)
 
-        select_video_button = QPushButton("Select Video")
-        select_video_button.clicked.connect(lambda: self.select_file('video'))
-        video_file_layout.addWidget(select_video_button)
+        # select_video_button = QPushButton("Select Video")
+        # select_video_button.clicked.connect(lambda: self.select_file('video'))
+        # video_file_layout.addWidget(select_video_button)
 
-        video_layout.addWidget(video_file_group)
+        # video_layout.addWidget(video_file_group)
 
-        video_algo_group_box = QGroupBox("Algorithm")
-        video_algo_layout = QHBoxLayout(video_algo_group_box)
+        # video_algo_group_box = QGroupBox("Algorithm")
+        # video_algo_layout = QHBoxLayout(video_algo_group_box)
 
-        self.video_algo_delta = QRadioButton("Delta Encoding")
-        self.video_algo_motion = QRadioButton("Motion Compensation")
-        self.video_algo_delta.setChecked(True)
+        # self.video_algo_delta = QRadioButton("Delta Encoding")
+        # self.video_algo_motion = QRadioButton("Motion Compensation")
+        # self.video_algo_delta.setChecked(True)
 
-        video_algo_group = QButtonGroup(self)
-        video_algo_group.addButton(self.video_algo_delta)
-        video_algo_group.addButton(self.video_algo_motion)
+        # video_algo_group = QButtonGroup(self)
+        # video_algo_group.addButton(self.video_algo_delta)
+        # video_algo_group.addButton(self.video_algo_motion)
 
-        video_algo_layout.addWidget(self.video_algo_delta)
-        video_algo_layout.addWidget(self.video_algo_motion)
+        # video_algo_layout.addWidget(self.video_algo_delta)
+        # video_algo_layout.addWidget(self.video_algo_motion)
 
-        video_layout.addWidget(video_algo_group_box)
+        # video_layout.addWidget(video_algo_group_box)
 
-        video_quality_group = QGroupBox("Compression Quality")
-        video_quality_layout = QVBoxLayout(video_quality_group)
+        # video_quality_group = QGroupBox("Compression Quality")
+        # video_quality_layout = QVBoxLayout(video_quality_group)
 
-        self.video_quality_slider = QSlider(Qt.Orientation.Horizontal)
-        self.video_quality_slider.setRange(1, 100)
-        self.video_quality_slider.setValue(self.quality)
-        self.video_quality_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
-        self.video_quality_slider.setTickInterval(10)
+        # self.video_quality_slider = QSlider(Qt.Orientation.Horizontal)
+        # self.video_quality_slider.setRange(1, 100)
+        # self.video_quality_slider.setValue(self.quality)
+        # self.video_quality_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        # self.video_quality_slider.setTickInterval(10)
 
-        self.video_quality_label = QLabel(f"Quality: {self.quality}%")
-        self.video_quality_slider.valueChanged.connect(self.update_video_quality)
+        # self.video_quality_label = QLabel(f"Quality: {self.quality}%")
+        # self.video_quality_slider.valueChanged.connect(self.update_video_quality)
 
-        video_quality_layout.addWidget(self.video_quality_label)
-        video_quality_layout.addWidget(self.video_quality_slider)
+        # video_quality_layout.addWidget(self.video_quality_label)
+        # video_quality_layout.addWidget(self.video_quality_slider)
 
-        video_layout.addWidget(video_quality_group)
+        # video_layout.addWidget(video_quality_group)
 
-        video_action_layout = QHBoxLayout()
+        # video_action_layout = QHBoxLayout()
 
-        self.compress_video_button = QPushButton("Compress Video")
-        self.compress_video_button.clicked.connect(lambda: self.compress('video'))
-        self.compress_video_button.setEnabled(False)
+        # self.compress_video_button = QPushButton("Compress Video")
+        # self.compress_video_button.clicked.connect(lambda: self.compress('video'))
+        # self.compress_video_button.setEnabled(False)
 
-        video_action_layout.addWidget(self.compress_video_button)
+        # video_action_layout.addWidget(self.compress_video_button)
 
-        video_layout.addLayout(video_action_layout)
+        # video_layout.addLayout(video_action_layout)
 
-        self.video_progress = QProgressBar()
-        self.video_progress.setRange(0, 100)
-        self.video_progress.setValue(0)
-        video_layout.addWidget(self.video_progress)
+        # self.video_progress = QProgressBar()
+        # self.video_progress.setRange(0, 100)
+        # self.video_progress.setValue(0)
+        # video_layout.addWidget(self.video_progress)
 
-        video_preview_layout = QHBoxLayout()
+        # video_preview_layout = QHBoxLayout()
 
-        original_video_group = QGroupBox("Original Video")
-        original_video_layout = QVBoxLayout(original_video_group)
+        # original_video_group = QGroupBox("Original Video")
+        # original_video_layout = QVBoxLayout(original_video_group)
 
-        self.original_video_label = QLabel()
-        self.original_video_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.original_video_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        # self.original_video_label = QLabel()
+        # self.original_video_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # self.original_video_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
-        original_video_layout.addWidget(self.original_video_label)
-        self.original_video_size_label = QLabel("Size: N/A")
-        original_video_layout.addWidget(self.original_video_size_label)
+        # original_video_layout.addWidget(self.original_video_label)
+        # self.original_video_size_label = QLabel("Size: N/A")
+        # original_video_layout.addWidget(self.original_video_size_label)
 
-        video_preview_layout.addWidget(original_video_group)
+        # video_preview_layout.addWidget(original_video_group)
 
-        compressed_video_group = QGroupBox("Compressed Video")
-        compressed_video_layout = QVBoxLayout(compressed_video_group)
+        # compressed_video_group = QGroupBox("Compressed Video")
+        # compressed_video_layout = QVBoxLayout(compressed_video_group)
 
-        self.compressed_video_label = QLabel()
-        self.compressed_video_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.compressed_video_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        # self.compressed_video_label = QLabel()
+        # self.compressed_video_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # self.compressed_video_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
-        compressed_video_layout.addWidget(self.compressed_video_label)
-        self.compressed_video_size_label = QLabel("Size: N/A")
-        compressed_video_layout.addWidget(self.compressed_video_size_label)
+        # compressed_video_layout.addWidget(self.compressed_video_label)
+        # self.compressed_video_size_label = QLabel("Size: N/A")
+        # compressed_video_layout.addWidget(self.compressed_video_size_label)
 
-        video_preview_layout.addWidget(compressed_video_group)
+        # video_preview_layout.addWidget(compressed_video_group)
 
-        video_layout.addLayout(video_preview_layout)
+        # video_layout.addLayout(video_preview_layout)
 
         main_layout.addWidget(tabs)
 
@@ -442,33 +442,33 @@ class MainWindow(QMainWindow):
         except Exception as e:
             self.show_error(f"Error displaying image: {str(e)}")
 
-    def display_video_frame(self, video_path, label):
-        try:
-            cap = cv2.VideoCapture(video_path)
+    # def display_video_frame(self, video_path, label):
+    #     try:
+    #         cap = cv2.VideoCapture(video_path)
 
-            ret, frame = cap.read()
+    #         ret, frame = cap.read()
 
-            if ret:
-                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    #         if ret:
+    #             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-                height, width, channels = frame_rgb.shape
-                bytes_per_line = channels * width
-                qimage = QImage(frame_rgb.data, width, height, bytes_per_line, QImage.Format.Format_RGB888)
+    #             height, width, channels = frame_rgb.shape
+    #             bytes_per_line = channels * width
+    #             qimage = QImage(frame_rgb.data, width, height, bytes_per_line, QImage.Format.Format_RGB888)
 
-                pixmap = QPixmap.fromImage(qimage)
+    #             pixmap = QPixmap.fromImage(qimage)
 
-                pixmap = pixmap.scaled(
-                    label.width(), label.height(),
-                    Qt.AspectRatioMode.KeepAspectRatio,
-                    Qt.TransformationMode.SmoothTransformation
-                )
+    #             pixmap = pixmap.scaled(
+    #                 label.width(), label.height(),
+    #                 Qt.AspectRatioMode.KeepAspectRatio,
+    #                 Qt.TransformationMode.SmoothTransformation
+    #             )
 
-                label.setPixmap(pixmap)
+    #             label.setPixmap(pixmap)
 
-            cap.release()
+    #         cap.release()
 
-        except Exception as e:
-            self.show_error(f"Error displaying video frame: {str(e)}")
+    #     except Exception as e:
+    #         self.show_error(f"Error displaying video frame: {str(e)}")
 
     def format_size(self, size_bytes):
         units = ['B', 'KB', 'MB', 'GB', 'TB']
