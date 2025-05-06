@@ -279,14 +279,14 @@ class MainWindow(QMainWindow):
     def update_quality(self, value):
         self.quality = value
         self.quality_label.setText(f"Quality: {value}%")
-        self.video_quality_slider.setValue(value)
-        self.video_quality_label.setText(f"Quality: {value}%")
+        # self.video_quality_slider.setValue(value)
+        # self.video_quality_label.setText(f"Quality: {value}%")
 
-    def update_video_quality(self, value):
-        self.quality = value
-        self.video_quality_label.setText(f"Quality: {value}%")
-        self.quality_slider.setValue(value)
-        self.quality_label.setText(f"Quality: {value}%")
+    # def update_video_quality(self, value):
+    #     self.quality = value
+    #     self.video_quality_label.setText(f"Quality: {value}%")
+    #     self.quality_slider.setValue(value)
+    #     self.quality_label.setText(f"Quality: {value}%")
 
     def select_file(self, file_type):
         if file_type == 'image':
@@ -294,10 +294,10 @@ class MainWindow(QMainWindow):
                 self, "Select Image", "", "Image Files (*.png *.jpg *.jpeg *.bmp *.tiff *.gif)"
             )
 
-        elif file_type == 'video':
-            file_path, _ = QFileDialog.getOpenFileName(
-                self, "Select Video", "", "Video Files (*.mp4 *.avi *.mov *.mkv)"
-            )
+        # elif file_type == 'video':
+        #     file_path, _ = QFileDialog.getOpenFileName(
+        #         self, "Select Video", "", "Video Files (*.mp4 *.avi *.mov *.mkv)"
+        #     )
 
         if file_path:
             self.input_file_path = file_path
@@ -315,17 +315,17 @@ class MainWindow(QMainWindow):
                 self.compressed_image_label.clear()
                 self.compressed_image_size_label.setText("Size: N/A")
 
-            elif file_type == 'video':
-                self.video_file_label.setText(os.path.basename(file_path))
-                self.compress_video_button.setEnabled(True)
+            # elif file_type == 'video':
+            #     self.video_file_label.setText(os.path.basename(file_path))
+            #     self.compress_video_button.setEnabled(True)
 
-                self.display_video_frame(file_path, self.original_video_label)
+            #     self.display_video_frame(file_path, self.original_video_label)
 
-                size = os.path.getsize(file_path)
-                self.original_video_size_label.setText(f"Size: {self.format_size(size)}")
+            #     size = os.path.getsize(file_path)
+            #     self.original_video_size_label.setText(f"Size: {self.format_size(size)}")
 
-                self.compressed_video_label.clear()
-                self.compressed_video_size_label.setText("Size: N/A")
+            #     self.compressed_video_label.clear()
+            #     self.compressed_video_size_label.setText("Size: N/A")
 
     def compress(self, file_type):
         if not self.input_file_path:
@@ -337,11 +337,11 @@ class MainWindow(QMainWindow):
             else:
                 algorithm = 'huffman'
 
-        elif file_type == 'video':
-            if self.video_algo_delta.isChecked():
-                algorithm = 'delta'
-            else:
-                algorithm = 'motion'
+        # elif file_type == 'video':
+        #     if self.video_algo_delta.isChecked():
+        #         algorithm = 'delta'
+        #     else:
+        #         algorithm = 'motion'
 
         self.current_algorithm = algorithm
 
@@ -352,12 +352,12 @@ class MainWindow(QMainWindow):
                 self, "Save Compressed Image", "", f"Image Files (*{ext})"
             )
 
-        elif file_type == 'video':
-            _, ext = os.path.splitext(self.input_file_path)
+        # elif file_type == 'video':
+        #     _, ext = os.path.splitext(self.input_file_path)
 
-            output_path, _ = QFileDialog.getSaveFileName(
-                self, "Save Compressed Video", "", f"Video Files (*{ext})"
-            )
+        #     output_path, _ = QFileDialog.getSaveFileName(
+        #         self, "Save Compressed Video", "", f"Video Files (*{ext})"
+        #     )
 
         if not output_path:
             return
@@ -372,9 +372,9 @@ class MainWindow(QMainWindow):
             self.compress_image_button.setEnabled(False)
             progress_bar = self.image_progress
         
-        elif file_type == 'video':
-            self.compress_video_button.setEnabled(False)
-            progress_bar = self.video_progress
+        # elif file_type == 'video':
+        #     self.compress_video_button.setEnabled(False)
+        #     progress_bar = self.video_progress
 
         self.compression_thread = CompressionThread(
             file_type, algorithm, self.input_file_path, output_path, self.quality
@@ -399,15 +399,15 @@ class MainWindow(QMainWindow):
                 f"Size: {self.format_size(size)} (Ratio: {compression_ratio:.2f}x)"
             )
 
-        elif file_type == 'video':
-            self.compress_video_button.setEnabled(True)
+        # elif file_type == 'video':
+        #     self.compress_video_button.setEnabled(True)
 
-            self.display_video_frame(output_path, self.compressed_video_label)
+        #     self.display_video_frame(output_path, self.compressed_video_label)
 
-            size = os.path.getsize(output_path)
-            self.compressed_video_size_label.setText(
-                f"Size: {self.format_size(size)} (Ratio: {compression_ratio:.2f}x)"
-            )
+        #     size = os.path.getsize(output_path)
+        #     self.compressed_video_size_label.setText(
+        #         f"Size: {self.format_size(size)} (Ratio: {compression_ratio:.2f}x)"
+        #     )
 
         QMessageBox.information(
             self,
@@ -421,8 +421,8 @@ class MainWindow(QMainWindow):
         if self.file_type == 'image':
             self.compress_image_button.setEnabled(True)
 
-        elif self.file_type == 'video':
-            self.compress_video_button.setEnabled(True)
+        # elif self.file_type == 'video':
+        #     self.compress_video_button.setEnabled(True)
 
     def display_image(self, image_path, label):
         try:
