@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QApplication, QMessageBox
 import sys
+from PyQt6.QtWidgets import QApplication, QMessageBox
 
 from ui.main_window import MainWindow
 

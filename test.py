@@ -1,7 +1,6 @@
 import os
 import time
 import argparse
-from PIL import Image
 import matplotlib.pyplot as plt
 
 from image_compression import rle, huffman
@@ -27,8 +26,6 @@ def test_compression(image_path, output_dir=None, qualities=None):
     os.makedirs(output_dir, exist_ok=True)
     
     # Get original image info
-    original_size = os.path.getsize(image_path)
-    original_image = Image.open(image_path)
     file_name, file_ext = os.path.splitext(os.path.basename(image_path))
     
     results = {

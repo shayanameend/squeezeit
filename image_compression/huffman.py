@@ -1,8 +1,8 @@
-import numpy as np
-from PIL import Image
 import os
 import heapq
 from collections import Counter
+import numpy as np
+from PIL import Image
 
 class HuffmanNode:    
     def __init__(self, value, freq):

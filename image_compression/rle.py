@@ -1,6 +1,6 @@
+import os
 import numpy as np
 from PIL import Image
-import os
 
 def compress_image(input_path, output_path=None, quality=85):
     if output_path is None:

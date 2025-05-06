@@ -1,3 +1,6 @@
+import os
+import cv2
+from PIL import Image, ImageQt
 from PyQt6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QFileDialog,
     QTabWidget, QSizePolicy, QProgressBar, QMessageBox, QGroupBox, QRadioButton,
@@ -5,9 +8,6 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QPixmap, QImage
-from PIL import Image, ImageQt
-import os
-import cv2
 
 from image_compression import rle, huffman
 from video_compression import delta, motion

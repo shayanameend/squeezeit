@@ -1,7 +1,7 @@
-from PIL import Image
-import cv2
 import os
 import tempfile
+import cv2
+from PIL import Image
 
 def get_file_size(file_path):
     return os.path.getsize(file_path)
