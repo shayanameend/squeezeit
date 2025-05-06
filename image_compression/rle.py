@@ -40,30 +40,19 @@ def _compress_color_image(img_array, quality_level=85):
     for c in range(min(channels, 3)):
         channel_data = quantized[:, :, c]
 
-        if quality_level < 90:
-            smoothed = np.zeros_like(channel_data)
-            for i in range(1, height-1):
-                for j in range(1, width-1):
-                    smoothed[i, j] = np.mean(channel_data[i-1:i+2, j-1:j+2])
+        flat_data = channel_data.flatten()
 
-            blend_factor = max(0, min(1, (90 - quality_level) / 90))
-            channel_data = (channel_data * (1 - blend_factor) + smoothed * blend_factor).astype(np.uint8)
+        compressed_data = _rle_compress_data(flat_data)
 
-        compressed_rows = []
-        for row in channel_data:
-            compressed_row = _rle_compress_row(row)
-            compressed_rows.append(compressed_row)
+        decompressed_data = _rle_decompress_data(compressed_data, height * width)
 
-        reconstructed = np.zeros((height, width), dtype=np.uint8)
-        for i in range(height):
-            reconstructed[i, :] = compressed_rows[i][:width]
-
-        result[:, :, c] = reconstructed
+        reconstructed_channel = np.array(decompressed_data).reshape(height, width)
+        result[:, :, c] = reconstructed_channel
 
     if channels == 4:
         result[:, :, 3] = img_array[:, :, 3]
 
-    processed_image = Image.fromarray(result)
+    processed_image = Image.fromarray(result.astype(np.uint8))
 
     return processed_image
 
@@ -76,40 +65,51 @@ def _compress_grayscale_image(img_array, quality_level=85):
     quantization_factor = max(1, int((100 - quality_level) / 12))
     quantized = img_array // quantization_factor * quantization_factor
 
-    if quality_level < 90:
-        smoothed = np.zeros_like(quantized)
-        for i in range(1, height-1):
-            for j in range(1, width-1):
-                smoothed[i, j] = np.mean(quantized[i-1:i+2, j-1:j+2])
+    flat_data = quantized.flatten()
 
-        blend_factor = max(0, min(1, (90 - quality_level) / 90))
-        quantized = (quantized * (1 - blend_factor) + smoothed * blend_factor).astype(np.uint8)
+    compressed_data = _rle_compress_data(flat_data)
 
-    compressed_rows = []
-    for row in quantized:
-        compressed_row = _rle_compress_row(row)
-        compressed_rows.append(compressed_row)
+    decompressed_data = _rle_decompress_data(compressed_data, height * width)
 
-    reconstructed = np.zeros((height, width), dtype=np.uint8)
-    for i in range(height):
-        reconstructed[i, :] = compressed_rows[i][:width]
+    reconstructed_image = np.array(decompressed_data).reshape(height, width)
 
-    processed_image = Image.fromarray(reconstructed, mode='L')
+    processed_image = Image.fromarray(reconstructed_image.astype(np.uint8), mode='L')
 
     return processed_image
 
-def _rle_compress_row(row):
-    if len(row) == 0:
+def _rle_compress_data(data):
+    if len(data) == 0:
         return []
-    result = np.copy(row)
 
-    i = 1
-    while i < len(row) - 1:
-        if abs(int(row[i-1]) - int(row[i])) <= 8 and abs(int(row[i+1]) - int(row[i])) <= 8:
-            result[i] = (int(row[i-1]) + int(row[i]) + int(row[i+1])) // 3
-        i += 1
+    compressed = []
+    current_value = data[0]
+    count = 1
 
-    return result
+    for i in range(1, len(data)):
+        if data[i] == current_value:
+            count += 1
+        else:
+            compressed.append((current_value, count))
+            current_value = data[i]
+            count = 1
+
+    compressed.append((current_value, count))
+
+    return compressed
+
+def _rle_decompress_data(compressed_data, original_length):
+    decompressed = []
+
+    for value, count in compressed_data:
+        decompressed.extend([value] * count)
+
+    if len(decompressed) < original_length:
+        last_value = decompressed[-1] if decompressed else 0
+        decompressed.extend([last_value] * (original_length - len(decompressed)))
+    elif len(decompressed) > original_length:
+        decompressed = decompressed[:original_length]
+
+    return decompressed
 
 def get_supported_extensions():
     return ['.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.gif']
